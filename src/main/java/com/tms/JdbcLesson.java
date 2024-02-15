@@ -128,4 +128,29 @@ public class JdbcLesson {
         }
         return user;
     }
+
+    public boolean checkTransaction(){
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement statementAge = connection.prepareStatement("UPDATE users SET age=100 WHERE id=13");
+            PreparedStatement statementUsername = connection.prepareStatement("UPDATE users SET username='USER_TRANSACTION' WHERE id=13");
+            PreparedStatement statementPassword = connection.prepareStatement("UPDATE users SET user_password='USER_PASS' WHERE id=13");
+            statementAge.executeUpdate();
+            statementUsername.executeUpdate();
+            statementPassword.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
+        }catch (SQLException e){
+            System.out.println(e);
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException exception){
+                System.out.println(exception);
+            }
+
+        }
+        return false;
+    }
 }

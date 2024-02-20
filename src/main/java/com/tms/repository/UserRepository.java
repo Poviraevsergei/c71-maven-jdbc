@@ -1,5 +1,8 @@
-package com.tms;
+package com.tms.repository;
 
+import com.tms.User;
+
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,21 +10,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcLesson {
+public class UserRepository {
     private final static String SELECT_ALL_FROM_USERS = "SELECT * FROM users";
     private final static String SELECT_USER_FROM_USERS = "SELECT * FROM users WHERE id=?";
     private final static String INSERT_USER_INTO_USERS = "INSERT INTO users(id,username,user_password,created,changed,age)" +
             " VALUES(DEFAULT,?,?,?,?,?)";
     private final static String UPDATE_USER_INTO_USERS = "UPDATE users SET username=?, user_password=?, changed=?, age=? WHERE id=?";
     private final static String REMOVE_USER_FROM_USERS = "DELETE FROM users WHERE id=?";
+    private final static String MOST_OLDER_USER = "{? = call max_old_in_the_users()}";
+    private final static String TRUNCATE_TELEPHONE_TABLE = "call truncate_telephone_table()";
     private Connection connection = null;
     //CRUD
 
 
-    public JdbcLesson() {
+    public UserRepository() {
         try {
             //1. Регистрация драйвера
             Class.forName("org.postgresql.Driver");
@@ -129,7 +135,7 @@ public class JdbcLesson {
         return user;
     }
 
-    public boolean checkTransaction(){
+    public boolean checkTransaction() {
         try {
             connection.setAutoCommit(false);
             PreparedStatement statementAge = connection.prepareStatement("UPDATE users SET age=100 WHERE id=13");
@@ -141,15 +147,39 @@ public class JdbcLesson {
             connection.commit();
             connection.setAutoCommit(true);
             return true;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             try {
                 connection.rollback();
                 connection.setAutoCommit(true);
-            } catch (SQLException exception){
+            } catch (SQLException exception) {
                 System.out.println(exception);
             }
 
+        }
+        return false;
+    }
+
+    public String getUsernameOfTheMostOldUserFunction() {
+        String resultUsername = null;
+        try {
+            CallableStatement statement = connection.prepareCall(MOST_OLDER_USER);
+            statement.registerOutParameter(1, Types.VARCHAR);
+            statement.executeUpdate();
+            resultUsername = statement.getString(1);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return resultUsername;
+    }
+
+    public boolean truncateTelephoneTableFunction() {
+        try {
+            CallableStatement statement = connection.prepareCall(TRUNCATE_TELEPHONE_TABLE);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
         }
         return false;
     }

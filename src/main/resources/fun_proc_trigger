@@ -1,0 +1,60 @@
+Функция
+    (не изменяет данные)
+CREATE OR REPLACE FUNCTION MAX_OLD_IN_THE_USERS()
+    RETURNS text
+    LANGUAGE plpgsql
+AS
+$$
+DECLARE
+    result_username text;
+    max_age         integer;
+BEGIN
+    SELECT max(age) INTO max_age FROM users;
+    SELECT username INTO result_username FROM users WHERE age = max_age;
+    return result_username;
+END;
+$$;
+
+SELECT max_old_in_the_users();
+________________________________________
+Процедура
+CREATE OR REPLACE PROCEDURE TRUNCATE_TELEPHONE_TABLE()
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    TRUNCATE telephone;
+END;
+$$;
+
+CALL truncate_telephone_table();
+________________________________________
+Когда добавляется/обновляется/удаляется запись в таблице тогда запусти таку-то функцию
+CREATE TABLE logs
+(
+    "id"    bigserial primary key,
+    "text"  text,
+    "added" timestamp without time zone
+)
+
+CREATE OR REPLACE FUNCTION ADD_TO_LOG() RETURNS TRIGGER
+AS
+$$
+DECLARE
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO logs(id, text, added) values (DEFAULT, 'Added new user ' || NEW.username, now());
+        return NEW;
+    ELSEIF TG_OP = 'UPDATE' THEN
+        INSERT INTO logs(id, text, added) values (DEFAULT, 'Updated user ' || NEW.username, now());
+        return NEW;
+    ELSEIF TG_OP = 'DELETE' THEN
+        INSERT INTO logs(id, text, added) values (DEFAULT, 'Removed user ' || OLD.username, now());
+        return OLD;
+    end if;
+end;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER TRIGGER_USERS
+    AFTER INSERT OR UPDATE OR DELETE ON users FOR EACH ROW EXECUTE PROCEDURE add_to_log();
+

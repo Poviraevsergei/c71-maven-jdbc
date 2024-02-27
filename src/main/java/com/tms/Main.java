@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 public class Main {
     public static void main(String[] args) {
         UserRepository userRepository = new UserRepository();
-        System.out.println(userRepository.findAll());
+        System.out.println(userRepository.findById(14L));
+        System.out.println(userRepository.findById(14L));
 
 /*        //Create
         userRepository.createUser(user);

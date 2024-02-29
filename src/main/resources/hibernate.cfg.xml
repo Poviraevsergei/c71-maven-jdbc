@@ -14,5 +14,8 @@
         <property name="format_sql">true</property>
 
         <mapping class="com.tms.model.User"/>
+        <mapping class="com.tms.model.Author"/>
+        <mapping class="com.tms.model.Book"/>
+        <mapping class="com.tms.model.Page"/>
     </session-factory>
 </hibernate-configuration>

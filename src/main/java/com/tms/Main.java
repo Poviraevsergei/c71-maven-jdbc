@@ -1,28 +1,31 @@
 package com.tms;
 
-import com.tms.model.User;
-import com.tms.repository.UserRepository;
+import com.tms.model.Author;
+import com.tms.model.Book;
+import com.tms.model.Page;
+import com.tms.repository.AuthorRepository;
+import com.tms.repository.BookRepository;
+import com.tms.repository.PageRepository;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Collection;
 
 public class Main {
     public static void main(String[] args) {
-        UserRepository userRepository = new UserRepository();
-        System.out.println(userRepository.findById(14L));
-        System.out.println(userRepository.findById(14L));
+/*      PageRepository pageRepository = new PageRepository();
+        Page p = pageRepository.getPageById(1);
+        System.out.println(p);
+        System.out.println(p.getBook());*/
 
-/*        //Create
-        userRepository.createUser(user);
+/*        BookRepository bookRepository = new BookRepository();
+        Book b = bookRepository.getBookById(1);
+        System.out.println(b);
+        System.out.println(b.getPages());
+        System.out.println(b.getAuthors());*/
 
-        //Read
-        User user = userRepository.findById(108L);
-
-        //Update
-        user.setUsername("NEW_USERNAME");
-        userRepository.updateUser(user);
-
-        //Delete
-        userRepository.deleteUser(666L);*/
+        AuthorRepository authorRepository = new AuthorRepository();
+        for (Author a : authorRepository.getAllAuthors()){
+            System.out.println(a);
+            System.out.println(a.getBooks());
+        }
     }
 }

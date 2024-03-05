@@ -1,31 +1,28 @@
 package com.tms;
 
-import com.tms.model.Author;
-import com.tms.model.Book;
-import com.tms.model.Page;
-import com.tms.repository.AuthorRepository;
-import com.tms.repository.BookRepository;
-import com.tms.repository.PageRepository;
 
-import java.util.Collection;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
-/*      PageRepository pageRepository = new PageRepository();
-        Page p = pageRepository.getPageById(1);
-        System.out.println(p);
-        System.out.println(p.getBook());*/
+// XML, Annotation, Java
 
-/*        BookRepository bookRepository = new BookRepository();
-        Book b = bookRepository.getBookById(1);
-        System.out.println(b);
-        System.out.println(b.getPages());
-        System.out.println(b.getAuthors());*/
 
-        AuthorRepository authorRepository = new AuthorRepository();
-        for (Author a : authorRepository.getAllAuthors()){
-            System.out.println(a);
-            System.out.println(a.getBooks());
-        }
+        //1. создадим Spring Container (ApplicationContext)
+        ApplicationContext context = new ClassPathXmlApplicationContext("my-settings.xml"); //Это когда настройки через XML
+        Cap capBean = (Cap) context.getBean("cap");
+        Cap capBeanSecond = (Cap) context.getBean("cap");
+
+        capBean.text = "NEW_ONE";
+
+        // cap это один и тот же бин!
+        System.out.println(capBean.text);
+        System.out.println(capBeanSecond.text);
+        System.out.println(capBean.hashCode());
+        System.out.println(capBeanSecond.hashCode());
+
+
+
     }
 }

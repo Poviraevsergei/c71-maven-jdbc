@@ -12,11 +12,11 @@ public class Main {
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
 
         Cap capBean = (Cap) context.getBean("cap");
-        System.out.println(capBean.inner);
+        System.out.println(capBean);
 
         //DI IoC, Bean, 3 способа создания
 
-        //Scope, Autowire @Qualifier, , Этапы поднятия контекста, Spring Data Jpa
+        //Scope, Этапы поднятия контекста, Spring Data Jpa
 
         //TODO: Bean life cycle, why field inj is not rec;
     }

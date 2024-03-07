@@ -10,7 +10,14 @@ public class Main {
     public static void main(String[] args) {
         //1. создадим Spring Container (ApplicationContext) by Annotation
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+
         Cap capBean = (Cap) context.getBean("cap");
-        System.out.println(capBean);
+        System.out.println(capBean.inner);
+
+        //DI IoC, Bean, 3 способа создания
+
+        //Scope, Autowire @Qualifier, , Этапы поднятия контекста, Spring Data Jpa
+
+        //TODO: Bean life cycle, why field inj is not rec;
     }
 }
